@@ -1,0 +1,56 @@
+<!doctype HTML>
+<html>
+<head>
+  <title>Quotes Home</title>
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'poke/css/style.css' %}">
+</head>
+<body>
+
+<div class="error">
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert">
+        {{msg.message}}
+      </div>
+    {% endfor %}
+  {% endif %}
+</div> 
+<div class='main'>
+    <h3 class='top_nav_itm'> Welcome, {{ request.session.user }} </h3> <br>
+    <h3 class='top_nav_itm'> {{ poke_count }} people poked you!</h3>   
+    <p class='top_nav_itm'><a href='/reset'> Logout </a></p> <br>
+  <div class='disp_300'>  
+    {% for p in all_pokes %} 
+    <div class="row">
+      <p class='in20'>{{ p.poke_from.name }} poked you {{ p.count }} times </p>
+    </div>  
+    {% endfor %}
+  </div>
+  <div class="disp_3000">
+      <h3>People you may want to poke</h3>
+    <div class="header">
+      <p class="wid_100 bold">Name</p>
+      <p class="wid_100 bold">Alias</p>
+      <p class="wid_100 bold">Email</p>
+      <p class="wid_100 bold">Poked History</p>
+      <p class="wid_100 bold">Action</p>   
+    </div>
+    {% for user in all_users %}   
+      {% if user.id != request.session.uid %}
+        <div class="row">
+          <p class="wid_100 ">{{user.name}}</p>
+          <p class="wid_100 ">{{ user.alias }}</p>
+          <p class="wid_100 ">{{user.email}}</p>
+          <p class="wid_100 ">{{ user.tot_count}}</p>
+          <form class='wid_100' action='/add_poke/{{user.id}}' method='POST'>
+            {% csrf_token %}
+            <input type="submit" name="btn wid_150" class="btn_blue" value="Poke">
+          </form>
+        </div>  
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+</body>
+</html>
